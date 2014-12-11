@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# <nbformat>3.0</nbformat>
+
+# <codecell>
+
 #!/usr/bin/env python
 '''
 Script for enhancing MARS reports with data from the HOLLIS Presto API and the MARS transactions reports.
@@ -12,7 +17,7 @@ from lxml import html
 
 bib_dict = {} # Dictionary of HOLLIS bib numbers
 enhanced_dict = {} # Dictionary of enhanced data
-music_reports = ['R00','R06','R07','R11'] # List of reports to check for music headings
+music_reports = ['R00','R06','R07','R11', 'R28', 'R42', 'R119'] # List of reports to check for music headings
 no_replace_reports = ['R04'] # List of reports to check for 'No Replacement Found' records
 no_enhance_reports = ['R03', 'R04'] # List of reports that cannot or will not be enhanced
 # Authority reports without bib numbers cannot be enhanced by the HOLLIS Presto API
@@ -144,3 +149,4 @@ for csv_file, csv_data in enhanced_dict.items():
             writer = csv.writer(output, quoting=csv.QUOTE_ALL,quotechar='"')
             writer.writerows(csv_data)
     print csv_file, 'has been created'
+
