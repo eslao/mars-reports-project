@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 '''
 Script for enhancing MARS reports with data from the HOLLIS Presto API and the MARS transactions reports.
 Created for the Harvard Library ITS MARS Reports Pilot Project, 2014.
@@ -12,7 +12,7 @@ from lxml import html
 
 bib_dict = {} # Dictionary of HOLLIS bib numbers
 enhanced_dict = {} # Dictionary of enhanced data
-music_reports = ['R00','R06','R07','R11'] # List of reports to check for music headings
+music_reports = ['R00','R06','R07','R11', 'R28', 'R42', 'R119'] # List of reports to check for music headings
 no_replace_reports = ['R04'] # List of reports to check for 'No Replacement Found' records
 no_enhance_reports = ['R03', 'R04'] # List of reports that cannot or will not be enhanced
 # Authority reports without bib numbers cannot be enhanced by the HOLLIS Presto API
