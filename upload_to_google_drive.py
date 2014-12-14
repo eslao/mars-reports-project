@@ -19,8 +19,8 @@ from os.path import isfile, join
 # <codecell>
 
 # Copy your credentials from the console
-CLIENT_ID = '528918718964-mao4dfhi6o9ipdp8c0uq5i01skck1dti.apps.googleusercontent.com'
-CLIENT_SECRET = 'O3WMYTMIEbSGZHjoRKUOZ3qj'
+CLIENT_ID = #insert client id here
+CLIENT_SECRET = #insert client secret here
 
 # Check https://developers.google.com/drive/scopes for all available scopes
 OAUTH_SCOPE = 'https://www.googleapis.com/auth/drive'
