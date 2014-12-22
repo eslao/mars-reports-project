@@ -131,11 +131,11 @@ for report, lines in reports.items():
 
         if lines:
                 if report.startswith('R00'):
-                        # Keep rows that have a match number greater than 90%
+			# Keep rows that have a match number greater than 99%
                         filtered_lines.append(['Row No','Bib No','Tag','Ind','Unmatched Heading','Match %-1','Tag-1','Near Match-1',
-                        'Authority-1','Match %-2','Tag-2','Near Match-2','Authority-2','Assigned To','Notes','For Amy', 'Heading Matches Near Match?', 'Time Spent']) # Add header
+                        'Authority-1','Match %-2','Tag-2','Near Match-2','Authority-2','Assigned To','Notes','For Amy']) # Add header
                         for line in lines:
-                                if float(line[5][:-1]) >= 90 or float(line[9][:-1]) >= 90: # For 90% or greater matches
+                                if float(line[5][:-1]) >= 99 or float(line[9][:-1]) >= 99: # For 99% or greater matches
                                         del line[0] # Remove BSLW row number
                                         line += [random.choice(cataloger_group),'','','',''] # Add blank ('Assigned To', 'Notes', 'For Amy', 'Heading Matches Near Match?', and 'Time Spent') columns
                                         filtered_lines.append(line)
