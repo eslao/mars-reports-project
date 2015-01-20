@@ -1,4 +1,9 @@
-﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# <nbformat>3.0</nbformat>
+
+# <codecell>
+
+#!/usr/bin/env python
 '''
 Script for enhancing MARS reports with data from the HOLLIS Presto API and the MARS transactions reports.
 Created for the Harvard Library ITS MARS Reports Pilot Project, 2014.
@@ -9,6 +14,7 @@ import glob
 import requests
 import time
 from lxml import html
+import random # for assigning catalogers where language expertise overlaps
 
 bib_dict = {} # Dictionary of HOLLIS bib numbers
 enhanced_dict = {} # Dictionary of enhanced data
@@ -16,6 +22,9 @@ music_reports = ['R00','R06','R07','R11', 'R28', 'R42', 'R119'] # List of report
 no_replace_reports = ['R04'] # List of reports to check for 'No Replacement Found' records
 no_enhance_reports = ['R03', 'R04'] # List of reports that cannot or will not be enhanced
 # Authority reports without bib numbers cannot be enhanced by the HOLLIS Presto API
+
+#lists of catalogers for assigning report rows
+cataloger_by_language = {'ger':['John','Beth','Bruce'], 'ita':['Anthony','Beth','Karen'], 'spa':['Te-Yi','Anthony'], 'por':'John', 'fre':['John','Anthony','Bruce'], 'eng':['John', 'Jia Lin', 'Te-Yi', 'Chris', 'Anthony', 'Bruce', 'Karen']}
 
 # Get bib numbers from all of the current report CSV files
 for file in glob.glob('*.csv'):
@@ -58,9 +67,18 @@ for bib, fields in bib_dict.items(): # bib, fields as key, value
         for (i, j) in zip(own, collection): # Combine own field and collection code and format as a text string
             libraries.append( i + ' (' + j + ')')
         libraries = '; '.join(libraries)
-        bib_dict[bib] = [ldr06, language, libraries] # Add HOLLIS data to dictionary of bib numbers      
+        if report_no in ['R13', 'R14']: # assign cataloger by language
+            if type(cataloger_by_language[language]) is str: 
+                cataloger = cataloger_by_language[language]
+            elif type(cataloger_by_language[language]) is list:
+                cataloger = random.choice(cataloger_by_language[language])
+        elif report_no in ['R00', 'R11']: # assign cataloger randomly
+            cataloger = random.choice(cataloger_by_language['eng'])
+        else: # do not assign cataloger
+            cataloger = ''
+        bib_dict[bib] = [ldr06, language, libraries, cataloger] # Add HOLLIS data to dictionary of bib numbers
     else:
-        bib_dict[bib] = ['','','']
+        bib_dict[bib] = ['','','','']
     time.sleep(1)
 
 # Add HOLLIS data to CSV files
@@ -86,7 +104,7 @@ for file in glob.glob('*.csv'):
                     
                 if index == 0: # Get header row
                     row[0] = row[0].replace('"', '')
-                    row[:-3] += ['LDR 06','Language','Libraries']
+                    row[:-3] += ['LDR 06','Language','Libraries','Auto-Assigned To:']
                     enhanced_rows.append(row)
                 elif compare_col in bib_dict and bib_dict[compare_col] != '': # Check first column
                     row[:-3] += bib_dict[compare_col]
@@ -144,3 +162,4 @@ for csv_file, csv_data in enhanced_dict.items():
             writer = csv.writer(output, quoting=csv.QUOTE_ALL,quotechar='"')
             writer.writerows(csv_data)
     print csv_file, 'has been created'
+
