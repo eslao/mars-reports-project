@@ -1,11 +1,5 @@
 
-# coding: utf-8
-
-# In[37]:
-
 def cataloger_assignment(report_no, language): #function for determining cataloger auto-assignment, if any
-    
-    import random
     
     cataloger = ''
     # reports in which catalogers are auto-assigned
@@ -34,13 +28,6 @@ def cataloger_assignment(report_no, language): #function for determining catalog
         
     return cataloger #to do: determine why this sometimes throws an error if cataloger is not defined as blank at beginning of function
 
-
-# In[47]:
-
-
-# <nbformat>3.0</nbformat>
-
-# <codecell>
 
 #!/usr/bin/env python
 '''
