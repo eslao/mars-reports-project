@@ -1,8 +1,3 @@
-
-# coding: utf-8
-
-# In[15]:
-
 #!/usr/bin/env python
 '''
 Script for converting MARS report HTML pages (or Excel files for R00) to CSV files.
@@ -21,7 +16,7 @@ print sys.argv[0], 'is running ...'
 
 # Dictionary of reports to be processed
 ##reports = {'R04':[],'R06 LC_Subjects':[], 'R07 LC_Subjects':[], 'R13':[], 'R14':[], 'R25':[]} # Six original project reports
-reports = {'R00':[], 'R03_C1XX':[], 'R06 Series':[], 'R09 LC_Subjects': [], 'R11':[], 'R14':[], 'R39':[], 'R42':[], 'R119':[]} # Test reports for November 2014
+reports = {'R00':[], 'R03_C1XX':[], 'R06 LC_Subjects': [], 'R06 Series':[], 'R09 LC_Subjects': [], 'R11':[], 'R14':[], 'R39':[], 'R42':[], 'R119':[]} # Test reports for November 2014
 
 # Locate most recent reports
 base_url = 'http://lms01.harvard.edu/mars-reports/'
@@ -256,9 +251,3 @@ for report, lines in reports.items():
         else:
               print 'No', report, 'report for this month' # TO DO: This would be better as part of a log file
               # TO DO: Log could also give info about number of rows in each report
-
-
-# In[ ]:
-
-
-
