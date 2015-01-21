@@ -1,3 +1,8 @@
+
+# coding: utf-8
+
+# In[13]:
+
 #!/usr/bin/env python
 '''
 Script for converting MARS report HTML pages (or Excel files for R00) to CSV files.
@@ -119,16 +124,16 @@ for report, lines in reports.items():
                 if report.startswith('R00'):
 			# Keep rows that have a match number greater than 99%
                         filtered_lines.append(['Row No','Bib No','Tag','Ind','Unmatched Heading','Match %-1','Tag-1','Near Match-1',
-                        'Authority-1','Match %-2','Tag-2','Near Match-2','Authority-2','Assigned To','Notes','For Amy']) # Add header
+                        'Authority-1','Match %-2','Tag-2','Near Match-2','Authority-2']) # Add header
                         for line in lines:
                                 if float(line[5][:-1]) >= 99 or float(line[9][:-1]) >= 99: # For 99% or greater matches
                                         del line[0] # Remove BSLW row number
-                                        line += ['','',''] # Add blank ('Assigned To', 'Notes', and 'For Amy') columns
+                                        #line += ['','',''] # Add blank ('Assigned To', 'Notes', and 'For Amy') columns
                                         filtered_lines.append(line)
                 elif report.startswith('R03_C1XX'):
                         # Keep only rows with changes to 010 or 1XX fields; ignore indicator (and tag?) changes
                         # TO DO: Should old/new rows be on the same row or separate rows? (Currently separate.)
-                        filtered_lines.append(['Old/New','Ctrl No (010)','Tag','Ind','Heading','Assigned To','Notes','For Amy']) # Add header
+                        filtered_lines.append(['Old/New','Ctrl No (010)','Tag','Ind','Heading']) # Add header
                         changed_lines = []
                         for record_lines in lines:
                                 for record_line in record_lines:
@@ -156,7 +161,7 @@ for report, lines in reports.items():
                         # Keep only the 010 and the highlighted changed field
                         # Keep No Replacement Found rows but put in separate report
                         # Use 008 byte 32 to remove undifferentiated name records; imperfect since byte is often changed from 'b' when last name is removed
-                        filtered_lines.append(['Old/New','Ctrl No (010)','Tag','Ind','Heading','Assigned To','Notes','For Amy']) # Add header
+                        filtered_lines.append(['Old/New','Ctrl No (010)','Tag','Ind','Heading']) # Add header
                         for record_lines in lines: #For each old/new record pair
                                 changes = 0 # counter for number of changed fields
                                 changed_lines = []
@@ -187,7 +192,7 @@ for report, lines in reports.items():
                 elif report.startswith('R06') and 'Series' in report:
                         # Keep rows with 'needs review' (i.e., not bold) data
                         # TO DO: Confirm that this report does not contain invalid or partly valid fields like other R06 reports
-                        filtered_lines.append(['Row No','Bib No','Tag','Ind','Field Data','Needs Review','Assigned To','Notes','For Amy']) # Add header
+                        filtered_lines.append(['Row No','Bib No','Tag','Ind','Field Data','Needs Review']) # Add header
                         for line_index, line in enumerate(lines):
                                 line.insert(5,line[3].replace(line[4],'').strip()) # Get 'needs review' fields by removing bold fields
                                 # Assumption is that R06 series only has 'needs review' fields, not invalid and partly valid
@@ -198,7 +203,7 @@ for report, lines in reports.items():
                 elif report.startswith('R06'):
                         # Only keep rows that have invalid or partly valid fields
                         # TO DO: Do we want rows with 'unknown/may need review' (i.e., not bold) data also?
-                        filtered_lines.append(['Row No','Bib No','Tag','Ind','Field Data','Invalid','Partly Valid','Assigned To','Notes','For Amy']) # Add header
+                        filtered_lines.append(['Row No','Bib No','Tag','Ind','Field Data','Invalid','Partly Valid']) # Add header
                         for line in lines:
                                 if line[5] != '' or line[6] != '': # Skip rows that have neither invalid nor partly valid fields
                                         del line[4] # Delete valid (bold) data column
@@ -207,13 +212,13 @@ for report, lines in reports.items():
                 elif report.startswith('R07') and 'LC_Subjects' in report:
                         # Only keep 650 fields
                         # TO DO: Are we still removing everything but the 650 fields?
-                        filtered_lines.append(['Row No','Bib No','Tag','Ind','Field Data','Assigned To','Notes','For Amy']) # Add header
+                        filtered_lines.append(['Row No','Bib No','Tag','Ind','Field Data']) # Add header
                         for line in lines:
                                 if line[1] == '650': # Only keep 650s
                                         filtered_lines.append(line)
                 elif report.startswith('R25'):
                         # Only keep rows that have an unrecognized $z
-                        filtered_lines.append(['Row No','Bib No','Tag','Ind','Field Data','Unrecognized $z','Assigned To','Notes','For Amy']) # Add header
+                        filtered_lines.append(['Row No','Bib No','Tag','Ind','Field Data','Unrecognized $z']) # Add header
                         for line_index, line in enumerate(lines):
                                 if line[4] != '': # Skip rows without unrecognized $z
                                         lines[line_index].insert(-1, '') # Add blank ("For Amy") column to end
@@ -221,14 +226,14 @@ for report, lines in reports.items():
                 else: 
                         if lines[0][1] == 'Old': # For summary (e.g. Old/New) reports
                         # TO DO: Should old/new rows be on the same row or separate rows? (Currently separate.)
-                                filtered_lines.append(['Bib No', 'Old/New','Tag','Ind','Field Data','Assigned To','Notes','For Amy']) # Add header
+                                filtered_lines.append(['Bib No', 'Old/New','Tag','Ind','Field Data']) # Add header
                                 for line_index, line in enumerate(lines):
                                         if line[0] is None:
                                                 del line[0]
                                                 line.insert(0, lines[line_index-1][0])
                                         filtered_lines.append(line)
                         else: # All other reports (e.g., R09, R11, R13, R14)
-                                filtered_lines.append(['Row No','Bib No','Tag','Ind','Field Data','Assigned To','Notes','For Amy']) # Add header
+                                filtered_lines.append(['Row No','Bib No','Tag','Ind','Field Data']) # Add header
                                 filtered_lines += lines
 
                 for line_index, line in enumerate(filtered_lines): # Add row numbers
@@ -251,3 +256,9 @@ for report, lines in reports.items():
         else:
               print 'No', report, 'report for this month' # TO DO: This would be better as part of a log file
               # TO DO: Log could also give info about number of rows in each report
+
+
+# In[ ]:
+
+
+

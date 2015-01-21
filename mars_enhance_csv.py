@@ -1,4 +1,43 @@
-# -*- coding: utf-8 -*-
+
+# coding: utf-8
+
+# In[37]:
+
+def cataloger_assignment(report_no, language): #function for determining cataloger auto-assignment, if any
+    
+    import random
+    
+    cataloger = ''
+    # reports in which catalogers are auto-assigned
+    random_assignment_reports = ['R00', 'R11']
+    language_assignment_reports = ['R13', 'R14']
+    
+    # lists of catalogers for assigning report rows
+    cataloger_by_language = {'ger':['John','Beth','Bruce'], 'ita':['Anthony','Beth','Karen'], 'spa':['Te-Yi','Anthony'], 'por':'John', 'fre':['John','Anthony','Bruce'], 'eng':['John', 'Jia Lin', 'Te-Yi', 'Chris', 'Anthony', 'Bruce', 'Karen']}
+
+
+    if report_no in random_assignment_reports:
+        cataloger = random.choice(cataloger_by_language['eng'])
+        #print report_no + ' ' + language + ' ' + cataloger + ' (random)'
+    elif report_no in language_assignment_reports:
+        if language in cataloger_by_language.keys():
+            if type(cataloger_by_language[language]) is str: 
+                cataloger = cataloger_by_language[language]
+            elif type(cataloger_by_language[language]) is list:
+                cataloger = random.choice(cataloger_by_language[language])
+            else: 
+                cataloger = random.choice(cataloger_by_language['eng'])
+            #print report_no + ' ' + language + ' ' + cataloger + ' (non-random)'
+    else:
+        cataloger = '' 
+        #print report_no + ' ' + language + ' no assignment'
+        
+    return cataloger #to do: determine why this sometimes throws an error if cataloger is not defined as blank at beginning of function
+
+
+# In[47]:
+
+
 # <nbformat>3.0</nbformat>
 
 # <codecell>
@@ -16,15 +55,22 @@ import time
 from lxml import html
 import random # for assigning catalogers where language expertise overlaps
 
-bib_dict = {} # Dictionary of HOLLIS bib numbers
+# reports in which catalogers are auto-assigned
+random_assignment_reports = ['R00', 'R11']
+language_assignment_reports = ['R13', 'R14']
+    
+# lists of catalogers for assigning report rows
+cataloger_by_language = {'ger':['John','Beth','Bruce'], 'ita':['Anthony','Beth','Karen'], 'spa':['Te-Yi','Anthony'], 'por':'John', 'fre':['John','Anthony','Bruce'], 'eng':['John', 'Jia Lin', 'Te-Yi', 'Chris', 'Anthony', 'Bruce', 'Karen']}
+
+
+
+
+bib_dict = {} # Dictionary of HOLLIS bib numbers -- example key/value: {'009151020': ['c', 'ita', 'MUS (ISHAM); MUS (HD)', '']}
 enhanced_dict = {} # Dictionary of enhanced data
 music_reports = ['R00','R06','R07','R11', 'R28', 'R42', 'R119'] # List of reports to check for music headings
 no_replace_reports = ['R04'] # List of reports to check for 'No Replacement Found' records
 no_enhance_reports = ['R03', 'R04'] # List of reports that cannot or will not be enhanced
 # Authority reports without bib numbers cannot be enhanced by the HOLLIS Presto API
-
-#lists of catalogers for assigning report rows
-cataloger_by_language = {'ger':['John','Beth','Bruce'], 'ita':['Anthony','Beth','Karen'], 'spa':['Te-Yi','Anthony'], 'por':'John', 'fre':['John','Anthony','Bruce'], 'eng':['John', 'Jia Lin', 'Te-Yi', 'Chris', 'Anthony', 'Bruce', 'Karen']}
 
 # Get bib numbers from all of the current report CSV files
 for file in glob.glob('*.csv'):
@@ -32,7 +78,7 @@ for file in glob.glob('*.csv'):
         reader = csv.reader(mars_csv)
         bib_row = ''
         report_no = file[:4].replace('_','')
-
+        
         if report_no not in no_enhance_reports: # Only enhance reports that can be enhanced
             for index, row in enumerate(reader):
                 if index == 0:
@@ -67,18 +113,9 @@ for bib, fields in bib_dict.items(): # bib, fields as key, value
         for (i, j) in zip(own, collection): # Combine own field and collection code and format as a text string
             libraries.append( i + ' (' + j + ')')
         libraries = '; '.join(libraries)
-        if report_no in ['R13', 'R14']: # assign cataloger by language
-            if type(cataloger_by_language[language]) is str: 
-                cataloger = cataloger_by_language[language]
-            elif type(cataloger_by_language[language]) is list:
-                cataloger = random.choice(cataloger_by_language[language])
-        elif report_no in ['R00', 'R11']: # assign cataloger randomly
-            cataloger = random.choice(cataloger_by_language['eng'])
-        else: # do not assign cataloger
-            cataloger = ''
-        bib_dict[bib] = [ldr06, language, libraries, cataloger] # Add HOLLIS data to dictionary of bib numbers
+        bib_dict[bib] = [ldr06, language, libraries] # Add HOLLIS data to dictionary of bib numbers
     else:
-        bib_dict[bib] = ['','','','']
+        bib_dict[bib] = ['','','']
     time.sleep(1)
 
 # Add HOLLIS data to CSV files
@@ -91,6 +128,8 @@ for file in glob.glob('*.csv'):
         no_replace_rows = [] # For 'No Replacement Found' R04 report
         report_no = file[:4].replace('_','')
 
+        #print report_no # debugging
+        
         if report_no not in no_enhance_reports: # Only enhance reports that can be enhanced
             for index, row in enumerate(reader):
                 if ',' in row[0]:
@@ -101,13 +140,20 @@ for file in glob.glob('*.csv'):
                     compare_col_2 = row[1].split(',')[0]
                 else:
                     compare_col_2 = row[1]
-                    
                 if index == 0: # Get header row
                     row[0] = row[0].replace('"', '')
-                    row[:-3] += ['LDR 06','Language','Libraries','Auto-Assigned To:']
+                    if report_no == 'R00':
+                        row[:-3] += ['LDR 06','Language','Libraries', 'Assigned To']
+                    else:
+                        row += ['LDR 06','Language','Libraries', 'Assigned To']
+                    row += ['Notes', 'For Amy']
+                    if report_no == 'R00':
+                        row += ['Heading Matches Near Match?', 'Time Spent']
                     enhanced_rows.append(row)
                 elif compare_col in bib_dict and bib_dict[compare_col] != '': # Check first column
-                    row[:-3] += bib_dict[compare_col]
+                    language = bib_dict[compare_col][1] #get language fron bib_dict
+                    row[:-3] += bib_dict[compare_col] #add Hollis data to report row
+                    row[:-3] += [cataloger_assignment(report_no, language)] #add cataloger assignment based on language
                     if report_no in music_reports: # For music reports, check for LDR 06 c, d, or j 
                         if bib_dict[compare_col][0] == 'c' or bib_dict[compare_col][0] == 'd' or bib_dict[compare_col][0] == 'j': 
                             music_rows.append(row) # Put in music report
@@ -116,7 +162,9 @@ for file in glob.glob('*.csv'):
                     else:
                         enhanced_rows.append(row)
                 elif compare_col_2 in bib_dict and bib_dict[compare_col_2] != '': # Check second column
-                    row[:-3] += bib_dict[compare_col_2]
+                    language = bib_dict[compare_col_2][1] #get language fron bib_dict
+                    row[:-3] += bib_dict[compare_col_2] #add Hollis data to report row
+                    row[:-3] += [cataloger_assignment(report_no, language)] #add cataloger assignment based on language
                     if report_no in music_reports: # For music reports, check for LDR 06 c, d, or j
                         if bib_dict[compare_col_2][0] == 'c' or bib_dict[compare_col_2][0] == 'd' or bib_dict[compare_col_2][0] == 'j':
                             music_rows.append(row) # Put in music report
@@ -162,4 +210,5 @@ for csv_file, csv_data in enhanced_dict.items():
             writer = csv.writer(output, quoting=csv.QUOTE_ALL,quotechar='"')
             writer.writerows(csv_data)
     print csv_file, 'has been created'
+
 
