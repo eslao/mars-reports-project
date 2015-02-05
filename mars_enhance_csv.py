@@ -144,8 +144,10 @@ for file in glob.glob('*.csv'):
                     if report_no in music_reports: # For music reports, check for LDR 06 c, d, or j 
                         if bib_dict[compare_col][0] == 'c' or bib_dict[compare_col][0] == 'd' or bib_dict[compare_col][0] == 'j': 
                             music_rows.append(row) # Put in music report
+                        elif any('libretto' in row_string.lower() for row_string in row): # check if any lower-cased string in the list = "libretto"
+                            music_rows.append(row) # Put in music report 
                         else:
-                            enhanced_rows.append(row) # Put in non-music report
+                            enhanced_rows.append(row) # Put in non-music report					
                     else:
                         enhanced_rows.append(row)
                 elif compare_col_2 in bib_dict and bib_dict[compare_col_2] != '': # Check second column
@@ -155,6 +157,8 @@ for file in glob.glob('*.csv'):
                     if report_no in music_reports: # For music reports, check for LDR 06 c, d, or j
                         if bib_dict[compare_col_2][0] == 'c' or bib_dict[compare_col_2][0] == 'd' or bib_dict[compare_col_2][0] == 'j':
                             music_rows.append(row) # Put in music report
+                         elif any('libretto' in row_string.lower() for row_string in row): # check if any lower-cased string in the list = "libretto"
+                            music_rows.append(row) # Put in music report 
                         else:
                             enhanced_rows.append(row) # Put in non-music report
                     else:
