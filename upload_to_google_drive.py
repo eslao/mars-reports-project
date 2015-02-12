@@ -9,8 +9,8 @@ import os
 import httplib2
 import pprint
 
-from apiclient.discovery import build
-from apiclient.http import MediaFileUpload
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
 from oauth2client.client import OAuth2WebServerFlow
 
 from os import listdir, getcwd
@@ -19,8 +19,8 @@ from os.path import isfile, join
 # <codecell>
 
 # Copy your credentials from the console
-CLIENT_ID = #insert client id here
-CLIENT_SECRET = #insert client secret here
+CLIENT_ID = 'CLIENT ID HERE' #insert client id here
+CLIENT_SECRET = 'CLIENT SECRET HERE' #insert client secret here
 
 # Check https://developers.google.com/drive/scopes for all available scopes
 OAUTH_SCOPE = 'https://www.googleapis.com/auth/drive'
