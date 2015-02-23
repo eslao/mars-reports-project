@@ -7,7 +7,7 @@ def cataloger_assignment(report_no, language): #function for determining catalog
     language_assignment_reports = ['R13', 'R14']
     
     # lists of catalogers for assigning report rows
-    cataloger_by_language = {'ger':['John','Beth','Bruce'], 'ita':['Anthony','Beth','Karen'], 'spa':['Te-Yi','Anthony'], 'por':'John', 'fre':['John','Anthony','Bruce'], 'eng':['John', 'Jia Lin', 'Te-Yi', 'Chris', 'Anthony', 'Bruce', 'Karen']}
+    cataloger_by_language = {'ger':['John','Beth','Bruce'], 'ita':['Anthony','Beth','Karen'], 'spa':['Mary Jane','Anthony'], 'por':'John', 'fre':['John','Anthony','Bruce'], 'eng':['John', 'Jia Lin', 'Mary Jane', 'Isabel', 'Anthony', 'Bruce', 'Karen']}
 
 
     if report_no in random_assignment_reports:
@@ -47,7 +47,7 @@ random_assignment_reports = ['R00', 'R11']
 language_assignment_reports = ['R13', 'R14']
     
 # lists of catalogers for assigning report rows
-cataloger_by_language = {'ger':['John','Beth','Bruce'], 'ita':['Anthony','Beth','Karen'], 'spa':['Te-Yi','Anthony'], 'por':'John', 'fre':['John','Anthony','Bruce'], 'eng':['John', 'Jia Lin', 'Te-Yi', 'Chris', 'Anthony', 'Bruce', 'Karen']}
+cataloger_by_language = {'ger':['John','Beth','Bruce'], 'ita':['Anthony','Beth','Karen'], 'spa':['Mary Jane','Anthony'], 'por':'John', 'fre':['John','Anthony','Bruce'], 'eng':['John', 'Jia Lin', 'Mary Jane', 'Isabel', 'Anthony', 'Bruce', 'Karen']}
 
 
 
@@ -56,7 +56,7 @@ bib_dict = {} # Dictionary of HOLLIS bib numbers -- example key/value: {'0091510
 enhanced_dict = {} # Dictionary of enhanced data
 music_reports = ['R00','R06','R07','R11', 'R28', 'R42', 'R119'] # List of reports to check for music headings
 no_replace_reports = ['R04'] # List of reports to check for 'No Replacement Found' records
-no_enhance_reports = ['R03', 'R04'] # List of reports that cannot or will not be enhanced
+no_enhance_reports = ['R03'] # List of reports that cannot or will not be enhanced
 # Authority reports without bib numbers cannot be enhanced by the HOLLIS Presto API
 
 # Get bib numbers from all of the current report CSV files
@@ -157,7 +157,7 @@ for file in glob.glob('*.csv'):
                     if report_no in music_reports: # For music reports, check for LDR 06 c, d, or j
                         if bib_dict[compare_col_2][0] == 'c' or bib_dict[compare_col_2][0] == 'd' or bib_dict[compare_col_2][0] == 'j':
                             music_rows.append(row) # Put in music report
-                         elif any('libretto' in row_string.lower() for row_string in row): # check if any lower-cased string in the list = "libretto"
+                        elif any('libretto' in row_string.lower() for row_string in row): # check if any lower-cased string in the list = "libretto"
                             music_rows.append(row) # Put in music report 
                         else:
                             enhanced_rows.append(row) # Put in non-music report
