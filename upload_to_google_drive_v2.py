@@ -57,12 +57,12 @@ file_dict = {}
 #upload each file in list
 for FILENAME in files_to_upload:
     # Insert a file
-    media_body = MediaFileUpload(FILENAME, mimetype='text/plain', resumable=True)
+    media_body = MediaFileUpload(FILENAME, mimetype='text/csv', resumable=True)
     filename_sans_extension = os.path.splitext(FILENAME)[0]
     body = {
       'title': filename_sans_extension,
       'description': filename_sans_extension,
-      #'mimeType': 'text/plain'
+      #'mimeType': 'text/csv'
     }
     file = drive_service.files().insert(body=body, media_body=media_body).execute()
     # pprint.pprint(file)
