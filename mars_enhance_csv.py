@@ -3,12 +3,11 @@ def cataloger_assignment(report_no, language): #function for determining catalog
     
     cataloger = ''
     # reports in which catalogers are auto-assigned
-    random_assignment_reports = ['R00', 'R11']
+    random_assignment_reports = ['R00', 'R03', 'R04', 'R06', 'R07', 'R25']
     language_assignment_reports = ['R13', 'R14']
     
     # lists of catalogers for assigning report rows
-    cataloger_by_language = {'ger':['John','Beth','Bruce'], 'ita':['Anthony','Beth','Karen'], 'spa':['Mary Jane','Anthony'], 'por':'John', 'fre':['John','Anthony','Bruce'], 'eng':['John', 'Jia Lin', 'Mary Jane', 'Isabel', 'Anthony', 'Bruce', 'Karen']}
-
+    cataloger_by_language = {'ger':['John','Beth','Bruce', 'Mary Jane'], 'ita':['Anthony','Beth','Karen','Mary Jane'], 'spa':['Isabel','Anthony'], 'por':['John','Isabel'], 'fre':['John','Anthony','Bruce','Mary Jane'], 'lat':['John','Bruce','Anthony'], 'chi':'Jia Lin', 'jpn':'Jia Lin', 'dut':['John','Mary Jane','Bruce'], 'dan':['John','Bruce'], 'nor':['John','Bruce'], 'swe':['John','Bruce'], 'ice':['John','Bruce'], 'eng':['John', 'Jia Lin', 'Mary Jane', 'Isabel', 'Anthony', 'Bruce', 'Karen','Michael']}
 
     if report_no in random_assignment_reports:
         cataloger = random.choice(cataloger_by_language['eng'])
@@ -43,18 +42,21 @@ from lxml import html
 import random # for assigning catalogers where language expertise overlaps
 
 # reports in which catalogers are auto-assigned
-random_assignment_reports = ['R00', 'R11']
+# random_assignment_reports = ['R00', 'R11'] 
+random_assignment_reports = ['R00', 'R03', 'R04', 'R06', 'R07', 'R25']
 language_assignment_reports = ['R13', 'R14']
+
     
 # lists of catalogers for assigning report rows
-cataloger_by_language = {'ger':['John','Beth','Bruce'], 'ita':['Anthony','Beth','Karen'], 'spa':['Mary Jane','Anthony'], 'por':'John', 'fre':['John','Anthony','Bruce'], 'eng':['John', 'Jia Lin', 'Mary Jane', 'Isabel', 'Anthony', 'Bruce', 'Karen']}
-
+#cataloger_by_language = {'ger':['John','Beth','Bruce'], 'ita':['Anthony','Beth','Karen'], 'spa':['Mary Jane','Anthony'], 'por':'John', 'fre':['John','Anthony','Bruce'], 'eng':['John', 'Jia Lin', 'Mary Jane', 'Isabel', 'Anthony', 'Bruce', 'Karen']}
+cataloger_by_language = {'ger':['John','Beth','Bruce', 'Mary Jane'], 'ita':['Anthony','Beth','Karen','Mary Jane'], 'spa':['Isabel','Anthony'], 'por':['John','Isabel'], 'fre':['John','Anthony','Bruce','Mary Jane'], 'lat':['John','Bruce','Anthony'], 'chi':'Jia Lin', 'jpn':'Jia Lin', 'dut':['John','Mary Jane','Bruce'], 'dan':['John','Bruce'], 'nor':['John','Bruce'], 'swe':['John','Bruce'], 'ice':['John','Bruce'], 'eng':['John', 'Jia Lin', 'Mary Jane', 'Isabel', 'Anthony', 'Bruce', 'Karen','Michael']}
 
 
 
 bib_dict = {} # Dictionary of HOLLIS bib numbers -- example key/value: {'009151020': ['c', 'ita', 'MUS (ISHAM); MUS (HD)', '']}
 enhanced_dict = {} # Dictionary of enhanced data
-music_reports = ['R00','R06','R07','R11', 'R28', 'R42', 'R119'] # List of reports to check for music headings
+#music_reports = ['R00','R06','R07','R11', 'R28', 'R42', 'R119'] # List of reports to check for music headings pre-Feb 2015
+music_reports = ['R00','R06','R07','R11'] # List of reports to check for music headings Feb 2015 forward
 no_replace_reports = ['R04'] # List of reports to check for 'No Replacement Found' records
 no_enhance_reports = ['R03'] # List of reports that cannot or will not be enhanced
 # Authority reports without bib numbers cannot be enhanced by the HOLLIS Presto API
@@ -133,6 +135,7 @@ for file in glob.glob('*.csv'):
                         row[:-3] += ['LDR 06','Language','Libraries', 'Assigned To']
                     else:
                         row += ['LDR 06','Language','Libraries', 'Assigned To']
+                    # Is this where the unwanted columns are being generated in R04? Think we need another if/then statement for R04    
                     row += ['Notes', 'For Amy']
                     if report_no == 'R00':
                         row += ['Heading Matches Near Match?', 'Time Spent']
